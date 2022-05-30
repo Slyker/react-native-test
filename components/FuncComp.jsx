@@ -4,6 +4,9 @@ import useTimeout from "./useTimeout.jsx"
 
 type Props = {};
 export default FuncComp = (props) => {
+  const timeOut = 3
+  const [initial, setInitial] = useState(false)
+  const [countDown,setCountDown] = useState(0)
   const [count,setCount] = useState(0)
   const [timeoutRes,setTimeoutRes] = useState(0)
   const [isDouble,setIsDouble] =useState(false)
@@ -16,10 +19,26 @@ export default FuncComp = (props) => {
           setTimeoutRes(count)
       }, 1000);*/
   }
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if(countDown > 0){
+        setCountDown(seconds => seconds - 1);
+      }
+      
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [countDown]);
+  
   useEffect(() => { // works !! trigger when count is updated
+  if(initial){
+    setCountDown(timeOut)
+  }else{
+    setInitial(true)
+  }
+  
    const timeout = setTimeout(() => {
       setTimeoutRes(count);
-    }, 1000);
+    }, timeOut * 1000);
 
    return () => clearTimeout(timeout);
   },[count]);
@@ -31,6 +50,9 @@ export default FuncComp = (props) => {
     <View style={styles.container}>
         <Text style={styles.welcome}>
           Welcome to function count : {count}
+        </Text>
+         <Text style={styles.welcome}>
+          Timeout countdown : {countDown}
         </Text>
         <Text style={styles.welcome}>
           Timeout result : {timeoutRes}
@@ -47,6 +69,12 @@ export default FuncComp = (props) => {
           onPress={()=>{setCount(count+val);alertResult()}}
           title="Count more"
           color="red"
+          accessibilityLabel=""
+        />
+         <Button
+          onPress={()=>{setCount(0);alertResult()}}
+          title="Reset"
+          color="black"
           accessibilityLabel=""
         />
       </View>

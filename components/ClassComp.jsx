@@ -5,26 +5,51 @@ type Props = {};
 export default class ClassComp extends Component<Props> {
   constructor(props){
     super(props)
+     this.timeOut = 3
+     this.timeout;
     this.state={
       count:0,
+      countDown:0,
+      initial:false,
       isDouble:false,
-      timeoutRes:0
+      timeoutRes:0,
     }
     this.alertResult = () => {
+      
+    if(this.state.initial){
+    this.setState({countDown:this.timeOut})
+  }else{
+    this.setState({initial:true})
+  }
+    
+  
     setTimeout(() => {
         //alert(`Count : ${this.state.count}`);
           this.setState({timeoutRes:this.state.count})
+      }, this.timeOut * 1000);
+  }}
+  
+  componentDidMount () {
+     
+      this.timeout = setInterval(() => {
+        if(this.state.countDown > 0){
+          this.setState({countDown:this.state.countDown-1})
+        }
       }, 1000);
-  }
-    
-  }
+    }
+    componentDidUpdate(){
+      clearTimeout(this.timeout);
+    }
   render() {
     let val = (this.state.isDouble)?2:1
     
     return (
       <View style={styles.container}>
-          <Text style={styles.welcome}>
+        <Text style={styles.welcome}>
           Welcome to class count : {this.state.count}
+        </Text>
+       <Text style={styles.welcome}>
+          Timeout countdown : {this.state.countDown}
         </Text>
         <Text style={styles.welcome}>
           Timeout result : {this.state.timeoutRes}
