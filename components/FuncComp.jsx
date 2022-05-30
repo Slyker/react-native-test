@@ -4,6 +4,8 @@ import useTimeout from "./useTimeout.jsx"
 
 type Props = {};
 export default FuncComp = (props) => {
+  let interval;
+  let timeout;
   const timeOut = 3
   const [initial, setInitial] = useState(false)
   const [countDown,setCountDown] = useState(0)
@@ -14,33 +16,36 @@ export default FuncComp = (props) => {
   let val = (isDouble)?2:1
   const alertResult = () => {
     
+    clearTimeout(timeout)
     /*setTimeout(() => { //Doesnt works with states 
         //alert(`Count : ${count}`);
           setTimeoutRes(count)
       }, 1000);*/
   }
-  useEffect(() => {
-    const interval = setInterval(() => {
+  useEffect(() =>{
+     interval = setInterval(() => {
       if(countDown > 0){
         setCountDown(seconds => seconds - 1);
+     
+      }else{
+        interval = clearInterval(interval);
       }
       
     }, 1000);
-    return () => clearInterval(interval);
+    return () => interval = clearInterval(interval);
   }, [countDown]);
   
   useEffect(() => { // works !! trigger when count is updated
-  if(initial){
-    setCountDown(timeOut)
-  }else{
-    setInitial(true)
-  }
-  
-   const timeout = setTimeout(() => {
+    if(initial){
+      setCountDown(timeOut)
+    }else{
+      setInitial(true)
+    }
+    timeout = setTimeout(() => {
       setTimeoutRes(count);
     }, timeOut * 1000);
 
-   return () => clearTimeout(timeout);
+   return () => timeout = clearTimeout(timeout);
   },[count]);
 
   /*useTimeout(() => {
@@ -74,7 +79,7 @@ export default FuncComp = (props) => {
          <Button
           onPress={()=>{setCount(0);alertResult()}}
           title="Reset"
-          color="black"
+          color="white"
           accessibilityLabel=""
         />
       </View>

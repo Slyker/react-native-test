@@ -7,39 +7,37 @@ export default class ClassComp extends Component<Props> {
     super(props)
      this.timeOut = 3
      this.timeout;
+     this.interval;
     this.state={
       count:0,
       countDown:0,
-      initial:false,
       isDouble:false,
-      timeoutRes:0,
+      timeoutRes:0
     }
     this.alertResult = () => {
-      
-    if(this.state.initial){
-    this.setState({countDown:this.timeOut})
-  }else{
-    this.setState({initial:true})
+      this.interval = clearInterval(this.interval);
+      this.timeout = clearTimeout(this.timeout);
+      this.setState({countDown:this.timeOut})
+     }
   }
-    
-  
-    setTimeout(() => {
+  componentDidUpdate (prevProps,prevState) {
+    if(!this.timeout){
+      
+      this.timeout = setTimeout(() => {
         //alert(`Count : ${this.state.count}`);
           this.setState({timeoutRes:this.state.count})
       }, this.timeOut * 1000);
-  }}
-  
-  componentDidMount () {
-     
-      this.timeout = setInterval(() => {
+    }
+     if(!this.interval ){
+       
+       
+      this.interval = setInterval(() => {
         if(this.state.countDown > 0){
           this.setState({countDown:this.state.countDown-1})
         }
       }, 1000);
     }
-    componentDidUpdate(){
-      clearTimeout(this.timeout);
-    }
+}
   render() {
     let val = (this.state.isDouble)?2:1
     
@@ -65,6 +63,12 @@ export default class ClassComp extends Component<Props> {
           onPress={()=>{this.setState({count:this.state.count+val});this.alertResult()}}
           title="Count more"
           color="#841584"
+          accessibilityLabel=""
+        />
+         <Button
+          onPress={()=>{this.setState({count:0});this.alertResult()}}
+          title="Reset"
+          color="black"
           accessibilityLabel=""
         />
       </View>
