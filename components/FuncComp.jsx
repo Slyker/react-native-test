@@ -11,12 +11,19 @@ export default FuncComp = (props) => {
   let val = (isDouble)?2:1
   const alertResult = () => {
     
-    setTimeout(() => {
+    /*setTimeout(() => { //Doesnt works with states 
         //alert(`Count : ${count}`);
           setTimeoutRes(count)
-      }, 1000);
-      
+      }, 1000);*/
   }
+  useEffect(() => { // works !! trigger when count is updated
+   const timeout = setTimeout(() => {
+      setTimeoutRes(count);
+    }, 1000);
+
+   return () => clearTimeout(timeout);
+  },[count]);
+
   /*useTimeout(() => {
       setTimeoutRes(count)
     }, 1000);*/
