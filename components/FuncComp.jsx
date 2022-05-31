@@ -1,6 +1,6 @@
 import React, {Component,useState,useEffect} from 'react';
 import {AppRegistry, StyleSheet,Switch,Button, Text, View} from 'react-native';
-import useTimeout from "./useTimeout.jsx"
+
 
 type Props = {};
 export default FuncComp = (props) => {
@@ -37,13 +37,13 @@ export default FuncComp = (props) => {
   
   useEffect(() => { // works !! trigger when count is updated
     if(initial){
-      setCountDown(timeOut)
+      setCountDown(isDouble? 0:timeOut)
     }else{
       setInitial(true)
     }
     timeout = setTimeout(() => {
       setTimeoutRes(count);
-    }, timeOut * 1000);
+    }, isDouble? 0:timeOut * 1000);
 
    return () => timeout = clearTimeout(timeout);
   },[count]);
@@ -51,17 +51,21 @@ export default FuncComp = (props) => {
   /*useTimeout(() => {
       setTimeoutRes(count)
     }, 1000);*/
+    const intervalCountDown = (noCd) => {
+      
+      if(noCd){
+          return"No cooldowns\nBonus x2"
+      }
+       return `Timeout countdown : ${countDown}\nTimeout result : ${timeoutRes}`
+        
+        
+    }
   return (
     <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to function count : {count}
-        </Text>
-         <Text style={styles.welcome}>
-          Timeout countdown : {countDown}
-        </Text>
-        <Text style={styles.welcome}>
-          Timeout result : {timeoutRes}
-        </Text>
+          Welcome to function count : {count} {'\n'}
+        {intervalCountDown(isDouble)}
+ </Text>
         <Switch
             trackColor={{ false: "#767577", true: "#81b0ff" }}
             thumbColor={isDouble ? "#f5dd4b" : "#f4f3f4"}
